@@ -1,24 +1,33 @@
-import 'package:bloc/bloc.dart';
-import 'package:nationaldex/core/api_to_page.dart';
-import 'pokemon_event.dart';
-import 'pokemon_state.dart';
+import 'dart:async';
 
-class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
-  final PokeApiV2 _pokeApiV2 = PokeApiV2();
-  PokemonBloc() : super(PokemonInitial());
+import 'package:nationaldex/bloc/pokemon_event.dart';
+import 'package:nationaldex/bloc/pokemon_state.dart';
+import 'package:nationaldex/model/pokemon.dart';
+import 'package:nationaldex/core/pokemon_repository.dart';
 
-  Stream<PokemonState> mapEventState(PokemonEvent event) async* {
-    if (event is PokemonPageRequest) {
-      yield PokemonPageLoading();
+class PokemonBloc {
+  final _pokemonRepository = PokemonRepository();
 
-      try {
-        final pokemonPageResponse = await _pokeApiV2.getAPI();
-        yield PokemonPageComplete(
-            pageListResponse: pokemonPageResponse.pageListResponse,
-            canLoadNextPage: pokemonPageResponse.canLoadNextPage);
-      } catch (e) {
-        yield PokemonPageFail(exception: e);
-      }
+  final StreamController<PokemonEvent> _inputPokemonController =
+      StreamController<PokemonEvent>();
+  final StreamController<PokemonHomeState> _outputPokemonController =
+      StreamController<PokemonHomeState>();
+  Sink<PokemonEvent> get inputPokemonController => _inputPokemonController.sink;
+  Stream<PokemonHomeState> get outputPokemonController =>
+      _outputPokemonController.stream;
+
+  PokemonBloc() {
+    _inputPokemonController.stream.listen(_mapEventToState);
+  }
+
+  _mapEventToState(PokemonEvent event) async {
+    List<Pokemon> pokemonList = [];
+
+    _outputPokemonController.add(PokemonHomeLoading());
+
+    if (event is PokemonPageEvent) {
+      pokemonList = await _pokemonRepository.getPokePageList(1);
     }
+    _outputPokemonController.add(PokemonHomeComplete(pokemonList: pokemonList));
   }
 }

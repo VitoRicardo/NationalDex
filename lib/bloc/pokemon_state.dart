@@ -1,20 +1,24 @@
 import 'package:nationaldex/model/pokemon.dart';
 
-abstract class PokemonState {}
-
-class PokemonInitial extends PokemonState {}
-
-class PokemonPageLoading extends PokemonState {}
-
-class PokemonPageComplete extends PokemonState {
-  final List<Pokemon> pageListResponse;
-  final String canLoadNextPage;
-
-  PokemonPageComplete(
-      {required this.pageListResponse, required this.canLoadNextPage});
+abstract class PokemonHomeState {
+  List<Pokemon> pokemonList;
+  PokemonHomeState({required this.pokemonList});
 }
 
-class PokemonPageFail extends PokemonState {
+class PokemonHomeInital extends PokemonHomeState {
+  PokemonHomeInital() : super(pokemonList: []);
+}
+
+class PokemonHomeLoading extends PokemonHomeState {
+  PokemonHomeLoading() : super(pokemonList: []);
+}
+
+class PokemonHomeComplete extends PokemonHomeState {
+  PokemonHomeComplete({required List<Pokemon> pokemonList})
+      : super(pokemonList: pokemonList);
+}
+
+class PokemonHomeError extends PokemonHomeState {
   final Exception exception;
-  PokemonPageFail({required this.exception});
+  PokemonHomeError({required this.exception}) : super(pokemonList: []);
 }
