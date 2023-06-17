@@ -3,8 +3,11 @@ import 'package:nationaldex/bloc/pokemon_bloc.dart';
 import 'package:nationaldex/bloc/pokemon_event.dart';
 import 'package:nationaldex/bloc/pokemon_state.dart';
 import 'package:nationaldex/constants/app_colors.dart';
-import 'package:nationaldex/widgets/sliver_bar_search.dart';
-import 'package:nationaldex/widgets/card_pokemon.dart';
+import 'widgets/sliver_bar_search.dart';
+import 'widgets/poke_loading.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:nationaldex/core/pokemon_model.dart';
+import 'detail_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -41,66 +44,84 @@ class _HomePageState extends State<HomePage> {
             slivers: [
               const SliverBarSearch(),
               StreamBuilder<PokemonHomeState>(
-                  stream: bloc.outputPokemonController,
-                  builder: (context, state) {
-                    if (state.data is PokemonHomeLoading) {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          childCount: 1,
-                          (context, index) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                        ),
-                      );
-                    } else if (state.data is PokemonHomeComplete) {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          childCount:
-                              (state.data!.pokemonList.length / 2).ceil(),
-                          (context, index) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CardPokemon(
-                                        pokemon:
-                                            state.data!.pokemonList[index * 2]),
+                stream: bloc.outputPokemonController,
+                builder: (context, state) {
+                  if (state.data is PokemonHomeLoading) {
+                    return const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  } else if (state.data is PokemonHomeComplete) {
+                    return SliverGrid.builder(
+                      itemCount: state.data!.pokemonList.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3),
+                      itemBuilder: (context, index) {
+                        List<Pokemon> pokeList = state.data!.pokemonList;
+
+                        return Card(
+                          color: AppColor.filterButton,
+                          child: TextButton(
+                            style:
+                                TextButton.styleFrom(padding: EdgeInsets.zero),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailPage(
+                                    pokemon: pokeList[index],
                                   ),
                                 ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: index * 2 + 1 <
-                                            state.data!.pokemonList.length
-                                                .ceil()
-                                        ? CardPokemon(
-                                            pokemon: state.data!
-                                                .pokemonList[index * 2 + 1])
-                                        : const SizedBox(),
+                              );
+                            },
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                child: GridTile(
+                                  child: Column(
+                                    children: [
+                                      CachedNetworkImage(
+                                        imageUrl: pokeList[index].spriteUrl,
+                                        errorWidget: (context, url, error) {
+                                          return Image.network(
+                                              pokeList[index].spriteUrl);
+                                        },
+                                        placeholder: (context, url) =>
+                                            const PokeLoading(),
+                                      ),
+                                      Text(
+                                        '${pokeList[index].name[0].toUpperCase()}'
+                                        '${pokeList[index].name.substring(1)}',
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ],
-                            );
-                          },
-                        ),
-                      );
-                    } else {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          childCount: 1,
-                          (context, index) {
-                            return const Center(
-                              child: Text('DEU RUIM'),
-                            );
-                          },
-                        ),
-                      );
-                    }
-                  })
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        childCount: 1,
+                        (context, index) {
+                          return const Center(
+                            child: Text('Erro'),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              )
             ],
           ),
         ),

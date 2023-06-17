@@ -1,4 +1,4 @@
-import 'package:nationaldex/model/pokemon.dart';
+import 'package:nationaldex/core/pokemon_model.dart';
 
 abstract class PokemonHomeState {
   List<Pokemon> pokemonList;

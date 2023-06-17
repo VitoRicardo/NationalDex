@@ -1,28 +1,25 @@
-import 'package:nationaldex/model/pokemon.dart';
+import 'package:nationaldex/core/pokemon_model.dart';
 import 'package:dio/dio.dart';
 import 'package:nationaldex/constants/api_url.dart';
 
 class PokemonRepository {
-  final List<Pokemon> _pokemonList = [];
+  List<Pokemon> _pokemonList = [];
   final _dio = Dio();
-  final Map<String, int> queryParameters = {
-    'limit': 200,
-    'offset': 0,
-  };
-  Future<List<Pokemon>> getPokePageList(int page) async {
+
+  Future<List<Pokemon>> getPokePageList() async {
     final Response<Map<String, dynamic>> response;
-    String apiPath =
-        '${ApiUrl.pokemon}?limit=${queryParameters['limit']! * page}&offset=${queryParameters['offset']}';
-    response = await _dio.get(apiPath);
-    _pokemonList.addAll(
-      (response.data?['results'] as List).map(
-        (pokeJson) => Pokemon.fromJson(pokeJson),
-      ),
-    );
+    response = await _dio.get(ApiUrl.nationalDex);
+
+    _pokemonList = (response.data!['pokemon_entries'] as List)
+        .map(
+          (pokeJson) => Pokemon.fromJson(pokeJson),
+        )
+        .toList();
+
     return _pokemonList;
   }
 
-  Future<List<Pokemon>> getPokemonsFromFilter(int page) async {
+  Future<List<Pokemon>> getPokemonsFromFilter(String type) async {
     //TODO: Implementar busca por filtro [Tipagem]
     return _pokemonList;
   }
