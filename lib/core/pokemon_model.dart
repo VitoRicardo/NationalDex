@@ -4,7 +4,8 @@ import 'package:nationaldex/constants/api_url.dart';
 class Pokemon {
   final int? id;
   final String name;
-  String get spriteUrl => '${ApiUrl.pokemonSprite}$id.png';
+  String get spriteUrlGBA => '${ApiUrl.pokemonSpriteGBA}$id.png';
+  String get spriteUrlArtWork => '${ApiUrl.pokemonSpriteArtWork}$id.png';
 
   double? _height;
   double? _weight;
@@ -33,14 +34,10 @@ class Pokemon {
   Future<void> fetchRemainingData() async {
     final dio = Dio();
     final Response<Map<String, dynamic>> responsePokemon;
-    // final Response<Map<String, dynamic>> responsePokemonSpecies;
 
     String apiPokemon = '${ApiUrl.pokemon}$id';
-    // String apiPokemonSpecies = '${ApiUrl.pokemonSpecies}$id';
 
     responsePokemon = await dio.get(apiPokemon);
-    // responsePokemonSpecies = await dio.get(apiPokemonSpecies);
-
     _height = responsePokemon.data!['height'] / 10;
     _weight = responsePokemon.data!['weight'] / 10;
 
@@ -59,7 +56,7 @@ class Pokemon {
 
     _stats = {
       for (Map<String, dynamic> element in responsePokemon.data!['stats'])
-        element['stat']['name']: element['base_stat']
+        _getAbbreviation(element['stat']['name']): element['base_stat']
     };
 
     if (_type!.length == 1) {
@@ -118,6 +115,23 @@ class Pokemon {
       },
     );
     return typeChart;
+  }
+
+  String _getAbbreviation(String statName) {
+    switch (statName) {
+      case 'attack':
+        return 'att';
+      case 'defense':
+        return 'def';
+      case 'special-attack':
+        return 'sp.att';
+      case 'special-defense':
+        return 'sp.def';
+      case 'speed':
+        return 'spd';
+      default:
+        return statName;
+    }
   }
 
   @override

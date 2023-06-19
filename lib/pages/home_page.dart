@@ -3,7 +3,7 @@ import 'package:nationaldex/bloc/pokemon_bloc.dart';
 import 'package:nationaldex/bloc/pokemon_event.dart';
 import 'package:nationaldex/bloc/pokemon_state.dart';
 import 'package:nationaldex/constants/app_colors.dart';
-import 'widgets/sliver_bar_search.dart';
+import 'widgets/home_page/sliver_bar_search.dart';
 import 'widgets/poke_loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:nationaldex/core/pokemon_model.dart';
@@ -85,10 +85,10 @@ class _HomePageState extends State<HomePage> {
                                   child: Column(
                                     children: [
                                       CachedNetworkImage(
-                                        imageUrl: pokeList[index].spriteUrl,
+                                        imageUrl: pokeList[index].spriteUrlGBA,
                                         errorWidget: (context, url, error) {
                                           return Image.network(
-                                              pokeList[index].spriteUrl);
+                                              pokeList[index].spriteUrlGBA);
                                         },
                                         placeholder: (context, url) =>
                                             const PokeLoading(),
