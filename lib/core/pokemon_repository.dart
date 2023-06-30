@@ -4,23 +4,29 @@ import 'package:nationaldex/constants/api_url.dart';
 
 class PokemonRepository {
   List<Pokemon> _pokemonList = [];
-  final _dio = Dio();
-
   Future<List<Pokemon>> getPokePageList() async {
-    final Response<Map<String, dynamic>> response;
-    response = await _dio.get(ApiUrl.nationalDex);
+    if (_pokemonList.isNotEmpty) {
+      return _pokemonList;
+    } else {
+      final dio = Dio();
+      final Response<Map<String, dynamic>> response;
+      response = await dio.get(ApiUrl.nationalDex);
 
-    _pokemonList = (response.data!['pokemon_entries'] as List)
-        .map(
-          (pokeJson) => Pokemon.fromJson(pokeJson),
-        )
-        .toList();
+      _pokemonList = (response.data!['pokemon_entries'] as List)
+          .map(
+            (pokeJson) => Pokemon.fromJson(pokeJson),
+          )
+          .toList();
 
-    return _pokemonList;
+      return _pokemonList;
+    }
   }
 
-  Future<List<Pokemon>> getPokemonsFromFilter(String type) async {
-    //TODO: Implementar busca por filtro [Tipagem]
-    return _pokemonList;
+  List<Pokemon> getPokemonByName(String filter) {
+    List<Pokemon> pokemonFilter = _pokemonList
+        .where((pokemon) =>
+            pokemon.name.toLowerCase().contains(filter.toLowerCase()))
+        .toList();
+    return pokemonFilter;
   }
 }

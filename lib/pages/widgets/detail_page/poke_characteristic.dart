@@ -13,17 +13,17 @@ class PokeCharacteristic extends StatelessWidget {
       text: TextSpan(
         children: <TextSpan>[
           TextSpan(
-              text: value,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  color: Colors.black87)),
+            text: characteristic,
+            style: const TextStyle(
+                color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold),
+          ),
           TextSpan(
-              text: characteristic,
-              style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold))
+            text: value,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                color: Colors.black87),
+          ),
         ],
       ),
     );

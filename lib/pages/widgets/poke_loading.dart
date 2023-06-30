@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PokeLoading extends StatefulWidget {
-  const PokeLoading({Key? key}) : super(key: key);
+  final Color color;
+  const PokeLoading({Key? key, required this.color}) : super(key: key);
 
   @override
   State<PokeLoading> createState() => _PokeLoadingState();
@@ -35,7 +36,7 @@ class _PokeLoadingState extends State<PokeLoading>
         width: 96,
         child: Image.asset(
           'assets/pokeball_svg.png',
-          color: Colors.red,
+          color: widget.color,
         ),
       ),
     );

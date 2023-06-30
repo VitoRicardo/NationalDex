@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:nationaldex/constants/app_colors.dart';
 
-class StatusBar extends StatefulWidget {
+class StatsBar extends StatefulWidget {
   final String stat;
   final int currentValue;
   final int _maxValue = 180;
 
-  const StatusBar({
+  const StatsBar({
     super.key,
     required this.stat,
     required this.currentValue,
   });
 
   @override
-  State<StatusBar> createState() => _StatusBarState();
+  State<StatsBar> createState() => _StatsBarState();
 }
 
-class _StatusBarState extends State<StatusBar>
+class _StatsBarState extends State<StatsBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -37,7 +38,13 @@ class _StatusBarState extends State<StatusBar>
   }
 
   @override
-  void didUpdateWidget(StatusBar oldWidget) {
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(StatsBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     _animation = Tween<double>(
             begin: 0,
@@ -54,7 +61,10 @@ class _StatusBarState extends State<StatusBar>
       children: [
         SizedBox(
           width: MediaQuery.of(context).size.width / 8,
-          child: Text(widget.stat),
+          child: Text(
+            widget.stat,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
         const SizedBox(
           width: 10,
@@ -66,16 +76,27 @@ class _StatusBarState extends State<StatusBar>
               animation: _animationController,
               builder: (BuildContext context, Widget? child) {
                 return ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(20),
+                  ),
                   child: LinearProgressIndicator(
                     value: _animation.value,
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColor.getColorStat(widget.currentValue),
+                    ),
                   ),
                 );
               },
             ),
           ),
         ),
+        const SizedBox(
+          width: 10,
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width / 15,
+          child: Text('${widget.currentValue}'),
+        )
       ],
     );
   }

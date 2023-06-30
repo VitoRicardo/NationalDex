@@ -9,14 +9,12 @@ class Pokemon {
 
   double? _height;
   double? _weight;
-  List<Map<String, dynamic>>? _abilities;
   List<String>? _type;
   Map<String, int>? _stats;
   Map<String, double>? _typeRelation;
 
   double? get height => _height;
   double? get weight => _weight;
-  List<Map<String, dynamic>>? get abilities => _abilities;
   List<String>? get type => _type;
   Map<String, int>? get stats => _stats;
   Map<String, double>? get weakness => _typeRelation;
@@ -40,14 +38,6 @@ class Pokemon {
     responsePokemon = await dio.get(apiPokemon);
     _height = responsePokemon.data!['height'] / 10;
     _weight = responsePokemon.data!['weight'] / 10;
-
-    _abilities = [
-      for (Map<String, dynamic> element in responsePokemon.data!['abilities'])
-        {
-          'ability': element['ability']['name'],
-          'is_hidden': element['is_hidden']
-        }
-    ];
 
     _type = [
       for (var element in responsePokemon.data!['types'])
@@ -136,6 +126,6 @@ class Pokemon {
 
   @override
   toString() {
-    return 'id: $id \n name: $name \n height: $height \n weight: $weight \n abilities: $abilities \n type: $type \n stats: $stats \n type_relation: $_typeRelation';
+    return 'id: $id \n name: $name \n height: $height \n weight: $weight \n type: $type \n stats: $stats \n type_relation: $_typeRelation';
   }
 }

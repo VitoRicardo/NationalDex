@@ -3,10 +3,9 @@ import 'dart:ui';
 class AppColor {
   static Color whiteBackground = const Color(0xfff3fcfb);
   static Color redBackground = const Color(0xffE8554F);
-  static Color headText = const Color(0xff393A5A);
   static Color headTextDescription = const Color(0xffA3A8AD);
   static Color searchField = const Color(0xffEBF3F5);
-  static Color filterButton = const Color(0xff5C5F7A);
+  static Color filterIcon = const Color(0xff5C5F7A);
 
   static Map<String, Color> typeColor = {
     'normal': const Color(0xffAAAA99),
@@ -28,4 +27,21 @@ class AppColor {
     'steel': const Color(0xffAAAABB),
     'fairy': const Color(0xffEE99EE),
   };
+
+  static Map<double, Color> colorWeakness = {
+    0: const Color(0xff2E3436),
+    0.25: const Color(0xffFF4422),
+    0.5: const Color(0xffFFCC33),
+    2: const Color(0xff77CC55),
+    4: const Color(0xff3399FF)
+  };
+
+  static Color getColorStat(int stat) {
+    if (stat <= 30) return const Color(0xffF34444);
+    if (30 < stat && stat <= 60) return const Color(0xffFF7F0F);
+    if (60 < stat && stat <= 90) return const Color(0xffFFDD57);
+    if (90 < stat && stat <= 120) return const Color(0xffA0E515);
+    if (120 < stat && stat <= 150) return const Color(0xff23CD5E);
+    return const Color(0xff00C2B8);
+  }
 }
