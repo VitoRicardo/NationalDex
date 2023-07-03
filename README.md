@@ -4,7 +4,7 @@ NationalDex é uma Pokedex que utiliza a PokéApi
 
 ![](https://github.com/VitoRicardo/Documentation-Resources/blob/main/NationalDex/NationalDex%20Gif.gif)
 
-## Resumo & Motivos
+## Resumo
 
 Esse projeto foi criado com o intuito de desenvolver meus conhecimentos em Flutter, tendo em vista que a criação de Pokedex são comumente utilizadas
 para aprender a trabalhar com APIs, além disso decide usar padrão BLoC para gerência de estado:
